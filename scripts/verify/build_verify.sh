@@ -19,10 +19,11 @@ fi
 echo "****COMPILING CIRCUIT****"
 start=`date +%s`
 set -x
-circom "$CIRCUIT_NAME".circom --r1cs --wasm --sym --c --wat --output "$BUILD_DIR"
+circom "$CIRCUIT_NAME".circom --r1cs --wasm --sym --c --wat --output "$BUILD_DIR"  --prime vesta
 { set +x; } 2>/dev/null
 end=`date +%s`
 echo "DONE ($((end-start))s)"
+
 
 echo "****GENERATING WITNESS FOR SAMPLE INPUT****"
 start=`date +%s`
@@ -54,11 +55,13 @@ npx snarkjs zkey verify "$BUILD_DIR"/"$CIRCUIT_NAME".r1cs "$PHASE1" "$BUILD_DIR"
 end=`date +%s`
 echo "DONE ($((end-start))s)"
 
+
 echo "** Exporting vkey"
 start=`date +%s`
 npx snarkjs zkey export verificationkey "$BUILD_DIR"/"$CIRCUIT_NAME".zkey "$BUILD_DIR"/vkey.json
 end=`date +%s`
 echo "DONE ($((end-start))s)"
+
 
 echo "****GENERATING PROOF FOR SAMPLE INPUT****"
 start=`date +%s`

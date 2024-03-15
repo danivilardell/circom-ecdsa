@@ -134,8 +134,25 @@ template ECDSAVerifyNoPubkeyCheck(n, k) {
     signal input s[k];
     signal input msghash[k];
     signal input pubkey[2][k];
+    signal input step_in[1];
 
-    signal output result;
+    for (var idx = 0; idx < k; idx++) {
+        log(r[idx]);
+    }
+    for (var idx = 0; idx < k; idx++) {
+        log(s[idx]);
+    }
+    for (var idx = 0; idx < k; idx++) {
+        log(msghash[idx]);
+    }
+    for (var idx = 0; idx < k; idx++) {
+        log(pubkey[0][idx]);
+    }
+    for (var idx = 0; idx < k; idx++) {
+        log(pubkey[1][idx]);
+    }
+
+    signal output step_out[1];
 
     var p[100] = get_secp256k1_prime(n, k);
     var order[100] = get_secp256k1_order(n, k);
@@ -222,7 +239,8 @@ template ECDSAVerifyNoPubkeyCheck(n, k) {
     component res_comp = IsEqual();
     res_comp.in[0] <== k;
     res_comp.in[1] <== num_equal[k - 2];
-    result <== res_comp.out;
+
+    step_out[0] <== step_in[0];
 }
 
 // TODO: implement ECDSA extended verify
@@ -235,6 +253,4 @@ template ECDSAExtendedVerify(n, k) {
     signal input s[k];
     signal input v;
     signal input msghash[k];
-
-    signal output result;
 }
